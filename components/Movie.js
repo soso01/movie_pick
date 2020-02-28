@@ -1,5 +1,5 @@
 import React from "react"
-import axios from "axios"
+import { Button } from "react-bootstrap"
 
 class Movie extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -9,20 +9,61 @@ class Movie extends React.Component {
   render() {
     console.log(this.props.data)
     if (!this.props.data) return null
-    const { num, name, imageUrl, userRating, criticRating, userReview } = this.props.data
+    const { selectAnswer, data, info } = this.props
+    const { num, name, imageUrl, userRating, criticRating, userReview } = data
     return (
-      <div style={{ width: "100%", height: "100%", textAlign: "center" }}>
+      <div style={{ position: "relative", width: "100%", height: "100%", textAlign: "center" }}>
         <img
           src={imageUrl}
           style={{ width: "auto", height: "auto", maxWidth: "100%", maxHeight: "100%", verticalAlign: "middle" }}
-        ></img>
-        {
-            this.props.info ? 
-            <div style={{position: 'absolute', width: "100%", height: "100%", backgroundColor: 'green'}}>
-
-            </div>
-            : null
-        }
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "black",
+            opacity: 0.5,
+            zIndex: 1
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: 2,
+            verticalAlign: "middle",
+            color: "white"
+          }}
+        >
+          {" "}
+          {info ? (
+            <React.Fragment>
+              <p>"{name}"</p>
+              <p>평론가 평점 : {criticRating}</p>
+              <p>유저 평점 : {userRating}</p>
+              <p>유저 리뷰</p>
+              <ul>
+                {userReview.map((v, i) => (
+                  <li>
+                    {v.rating} / {v.text} / {v.like} / {v.date}
+                  </li>
+                ))}
+              </ul>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <p>"{name}"</p>
+              <Button variant="primary" onClick={() => selectAnswer('up')}>UP</Button>
+              <Button variant="danger" onClick={() => selectAnswer('down')}>DOWN</Button>
+            </React.Fragment>
+          )}
+        </div>
       </div>
     )
   }

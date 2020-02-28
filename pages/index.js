@@ -1,9 +1,11 @@
 import React from "react"
 import Head from "next/head"
-import Movie from "../components/Movie"
 import movieData from "../movieData.json"
 import axios from "axios"
-import cheerio from "cheerio"
+
+import Movie from "../components/Movie"
+import StartModal from "../components/StartModal"
+import EndModal from "../components/EndModal"
 
 class Home extends React.Component {
   state = {
@@ -11,7 +13,8 @@ class Home extends React.Component {
     highScore: 0,
     data: [null, null],
     finishedNum: [],
-    info: [true, false]
+    info: [true, false],
+    status: "newGame"
   }
 
   init = async () => {
@@ -36,15 +39,51 @@ class Home extends React.Component {
     })
   }
 
+  selectAnswer = type => {
+    this.setState({})
+    const data = this.state.data
+    if (type == "up") {
+      if (data[1].criticRating >= data[0].criticRating) {
+        this.setState({ score: this.state.score + 1 })
+        this.getData()
+      } else {
+        this.setState({ status: "endGame" })
+      }
+    } else if (type == "down") {
+      if (data[1].criticRating <= data[0].criticRating) {
+        this.setState({ score: this.state.score + 1 })
+        this.getData()
+      } else {
+        this.setState({ status: "endGame" })
+      }
+    }
+  }
+
   render() {
+    const { status, info, highScore, score, data } = this.state
     return (
       <div style={{ height: "100%" }}>
         <Head>
-          <title>Home</title>
+          <title>Movie Pick!</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
+        <StartModal
+            show={status === "newGame"}
+            onHide={async () => {
+              await this.init()
+              this.setState({ status: "inGame" })
+            }}
+          ></StartModal>
+          <EndModal
+            score={score}
+            show={status === "endGame"}
+            onHide={async () => {
+              await this.init()
+              this.setState({ status: "inGame" })
+            }}
+          ></EndModal>
         <div className="hero" style={{ backgroundColor: "black", height: "100%" }}>
-          <div style={{ width: "100%", height: "10%" }}>
+          <div style={{ width: "100%", height: "10%", color: 'white'}}>
             <button
               onClick={() => {
                 this.init()
@@ -59,12 +98,14 @@ class Home extends React.Component {
             >
               getData
             </button>
+            <a>최고점수 : {highScore}</a>
+            <a>현재점수 : {score}</a>
           </div>
           <div style={{ width: "50%", height: "90%", float: "left" }}>
-            <Movie data={this.state.data[0]} info={this.state.info[0]} />
+            <Movie data={data[0]} info={info[0]} />
           </div>
           <div style={{ width: "50%", height: "90%", float: "left" }}>
-            <Movie data={this.state.data[1]} info={this.state.info[1]} />
+            <Movie data={data[1]} info={info[1]} selectAnswer={this.selectAnswer} />
           </div>
         </div>
         <style jsx global>
