@@ -98,8 +98,8 @@ class Home extends React.Component {
             >
               getData
             </button>
-            <a>최고점수 : {highScore}</a>
-            <a>현재점수 : {score}</a>
+            <h3>최고점수 : {highScore}</h3>
+            <h3>현재점수 : {score}</h3>
           </div>
           <div style={{ width: "50%", height: "90%", float: "left" }}>
             <Movie data={data[0]} info={info[0]} />
