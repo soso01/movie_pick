@@ -13,7 +13,7 @@ class Home extends React.Component {
     highScore: 0,
     data: [null, null],
     finishedNum: [],
-    info: [true, false],
+    isRatingOpen: false,
     status: "newGame"
   }
 
@@ -24,10 +24,15 @@ class Home extends React.Component {
     })
     await this.getData()
     await this.getData()
+    await this.getData()
   }
 
   getData = async () => {
     const { finishedNum, data } = this.state
+    await this.setState({
+      isRatingOpen: false,
+      data: [data[1], data[2], null]
+    })
     let num
     do num = movieData[Math.floor(Math.random() * movieData.length)]
     while (finishedNum.findIndex(el => el == num) !== -1)
@@ -35,32 +40,35 @@ class Home extends React.Component {
 
     this.setState({
       finishedNum: [...finishedNum, num],
-      data: [data[1], newData.data]
+      data: [data[1], data[2], newData.data]
     })
   }
 
-  selectAnswer = type => {
-    this.setState({})
+  selectAnswer = async type => {
     const data = this.state.data
-    if (type == "up") {
-      if (data[1].criticRating >= data[0].criticRating) {
-        this.setState({ score: this.state.score + 1 })
-        this.getData()
-      } else {
-        this.setState({ status: "endGame" })
+    await this.setState({ isRatingOpen: true })
+
+    setTimeout(() => {
+      if (type == "up") {
+        if (data[1].criticRating >= data[0].criticRating) {
+          this.setState({ score: this.state.score + 1 })
+          this.getData()
+        } else {
+          this.setState({ status: "endGame" })
+        }
+      } else if (type == "down") {
+        if (data[1].criticRating <= data[0].criticRating) {
+          this.setState({ score: this.state.score + 1 })
+          this.getData()
+        } else {
+          this.setState({ status: "endGame" })
+        }
       }
-    } else if (type == "down") {
-      if (data[1].criticRating <= data[0].criticRating) {
-        this.setState({ score: this.state.score + 1 })
-        this.getData()
-      } else {
-        this.setState({ status: "endGame" })
-      }
-    }
+    }, 3000)
   }
 
   render() {
-    const { status, info, highScore, score, data } = this.state
+    const { status, highScore, score, data, isRatingOpen } = this.state
     return (
       <div style={{ height: "100%" }}>
         <Head>
@@ -68,22 +76,22 @@ class Home extends React.Component {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <StartModal
-            show={status === "newGame"}
-            onHide={async () => {
-              await this.init()
-              this.setState({ status: "inGame" })
-            }}
-          ></StartModal>
-          <EndModal
-            score={score}
-            show={status === "endGame"}
-            onHide={async () => {
-              await this.init()
-              this.setState({ status: "inGame" })
-            }}
-          ></EndModal>
+          show={status === "newGame"}
+          onHide={async () => {
+            await this.init()
+            this.setState({ status: "inGame" })
+          }}
+        ></StartModal>
+        <EndModal
+          score={score}
+          show={status === "endGame"}
+          onHide={async () => {
+            await this.init()
+            this.setState({ status: "inGame" })
+          }}
+        ></EndModal>
         <div className="hero" style={{ backgroundColor: "black", height: "100%" }}>
-          <div style={{ width: "100%", height: "10%", color: 'white'}}>
+          <div style={{ width: "100%", height: "10%", color: "white" }}>
             <button
               onClick={() => {
                 this.init()
@@ -102,10 +110,13 @@ class Home extends React.Component {
             <h3>현재점수 : {score}</h3>
           </div>
           <div style={{ width: "50%", height: "90%", float: "left" }}>
-            <Movie data={data[0]} info={info[0]} />
+            <Movie data={data[0]} info={true} />
           </div>
           <div style={{ width: "50%", height: "90%", float: "left" }}>
-            <Movie data={data[1]} info={info[1]} selectAnswer={this.selectAnswer} />
+            <Movie data={data[1]} info={false} selectAnswer={this.selectAnswer} isRatingOpen={isRatingOpen} />
+          </div>
+          <div style={{ width: 0, height: 0, float: "left" }}>
+            <Movie data={data[2]} isRatingOpen={false} />
           </div>
         </div>
         <style jsx global>

@@ -1,18 +1,28 @@
 import React from "react"
 import { Button } from "react-bootstrap"
+import CountUp from "react-countup"
 
 class Movie extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.data === this.props.data) return false
+    if (nextProps.data === this.props.data && nextProps.isRatingOpen === this.props.isRatingOpen) return false
     return true
   }
   render() {
-    console.log(this.props.data)
+    console.log(this.props)
     if (!this.props.data) return null
-    const { selectAnswer, data, info } = this.props
+    const { selectAnswer, data, info, isRatingOpen } = this.props
     const { num, name, imageUrl, userRating, criticRating, userReview } = data
     return (
-      <div style={{ position: "relative", width: "100%", height: "100%", textAlign: "center" }}>
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          textAlign: "center",
+          WebkitAnimation: "slide 0.5s forwards",
+          
+        }}
+      >
         <img
           src={imageUrl}
           style={{ width: "auto", height: "auto", maxWidth: "100%", maxHeight: "100%", verticalAlign: "middle" }}
@@ -59,8 +69,18 @@ class Movie extends React.Component {
           ) : (
             <React.Fragment>
               <p>"{name}"</p>
-              <Button variant="primary" onClick={() => selectAnswer('up')}>UP</Button>
-              <Button variant="danger" onClick={() => selectAnswer('down')}>DOWN</Button>
+              {isRatingOpen ? (
+                <div>
+                  <CountUp end={criticRating} decimals={2} duration={2} />
+                  <br></br>
+                </div>
+              ) : null}
+              <Button variant="primary" onClick={() => selectAnswer("up")}>
+                UP
+              </Button>
+              <Button variant="danger" onClick={() => selectAnswer("down")}>
+                DOWN
+              </Button>
             </React.Fragment>
           )}
         </div>
