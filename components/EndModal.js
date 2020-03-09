@@ -18,7 +18,7 @@ function scoreTier(score) {
 function endModal(props) {
     const tier = scoreTier(props.score)
   return (
-    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">{props.score} 점</Modal.Title>
       </Modal.Header>

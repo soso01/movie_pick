@@ -33,7 +33,7 @@ app.prepare().then(() => {
       const name = $("#content > div.article > div.mv_info_area > div.mv_info > h3 > a:nth-child(1)").text()
       const imageUrl = $$("#targetImage").attr('src')
       const userReview = [];
-      for (let i = 1; i <= 5; i++) {
+      for (let i = 1; i <= 3; i++) {
         const review = {};
         review.rating = $(
           `#content > div.article > div.section_group.section_group_frst > div:nth-child(5) > div:nth-child(2) > div.score_result > ul > li:nth-child(${i}) > div.star_score > em`
