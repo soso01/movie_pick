@@ -73,8 +73,7 @@ class Home extends React.Component {
   }
 
   render() {
-    const { status, highScore, score, data, isRatingOpen, count, end } = this.state
-    console.log(end)
+    const { status, highScore, score, data, isRatingOpen } = this.state
     return (
       <div style={{ height: "100%" }}>
         <Head>
