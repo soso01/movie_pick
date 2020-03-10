@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "node server -p 80"
+    "start": "node server"
   },
   "dependencies": {
     "axios": "^0.19.2",
