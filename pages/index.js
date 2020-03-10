@@ -11,12 +11,10 @@ class Home extends React.Component {
   state = {
     score: 0,
     highScore: 0,
-    data: [null, null],
+    data: [null, null, null],
     finishedNum: [],
     isRatingOpen: false,
-    status: "newGame",
-    count: 0,
-    end: false
+    status: "newGame"
   }
 
   init = async () => {
@@ -33,9 +31,7 @@ class Home extends React.Component {
     const { finishedNum, data } = this.state
     await this.setState({
       isRatingOpen: false,
-      end: true,
-      data: [data[1], data[2], null],
-      count: this.state.count + 1
+      data: [data[1], data[2], null]
     })
     let num
     do num = movieData[Math.floor(Math.random() * movieData.length)]
@@ -44,8 +40,7 @@ class Home extends React.Component {
 
     this.setState({
       finishedNum: [...finishedNum, num],
-      data: [data[1], data[2], newData.data],
-      end: false
+      data: [data[1], data[2], newData.data]
     })
   }
 
@@ -99,9 +94,6 @@ class Home extends React.Component {
           <div style={{ width: "100%", height: "10%", color: "white", display: "table" }}>
             <h3 style={{ left: 10, padding: 20, position: "absolute" }}>최고점수 : {highScore}</h3>
             <h3 style={{ right: 10, padding: 20, position: "absolute" }}>현재점수 : {score}</h3>
-          </div>
-          <div style={{ width: "50%", height: "90%", float: "left", position: 'absolute', left: "-50%" }}>
-              <Movie data={data[0]} info={true} />
           </div>
           <div style={{ width: "50%", height: "90%", float: "left" }}>
               <Movie data={data[0]} info={true} />
